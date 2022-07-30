@@ -4,17 +4,19 @@ import { sub } from 'date-fns'
 const initialState = [
   {
     id: '1',
-    date: sub(new Date(), { minutes: 10}).toISOString(),
+    date: sub(new Date(), { minutes: 10 }).toISOString(),
     title: 'First Post!',
     content: 'Hello',
-    user: '0'
+    user: '0',
+    reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
   },
   {
     id: '2',
-    date: sub(new Date(), { minutes: 5}).toISOString(),
+    date: sub(new Date(), { minutes: 5 }).toISOString(),
     title: 'Second Post',
     content: 'More text',
-    user: '1'
+    user: '1',
+    reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
   },
 ]
 
@@ -30,13 +32,14 @@ const postsSlice = createSlice({
         return {
           payload: {
             id: nanoid(),
-            date: new Date().toISOString(), 
+            date: new Date().toISOString(),
             title,
             content,
             user: userId,
-          }
+            reactions: { thumbsUp: 0, hooray: 0, heart: 0, rocket: 0, eyes: 0 },
+          },
         }
-      }
+      },
     },
     postUpdated(state, action) {
       const { id, title, content } = action.payload
