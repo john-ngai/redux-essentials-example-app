@@ -8,7 +8,7 @@ import {
 import { Navbar } from './app/Navbar'
 import { PostsList } from './features/posts/PostsList'
 
-function App() {
+export default function App() {
   return (
     <Router>
       <Navbar />
@@ -29,5 +29,3 @@ function App() {
     </Router>
   )
 }
-
-export default App
