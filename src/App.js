@@ -1,12 +1,11 @@
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
+  Switch, Route, Redirect,
 } from 'react-router-dom'
-
+// Components
 import { Navbar } from './app/Navbar'
 import { PostsList } from './features/posts/PostsList'
+import { AddPostForm } from './features/posts/AddPostForm'
 
 export default function App() {
   return (
@@ -19,6 +18,7 @@ export default function App() {
             path="/"
             render={() => (
               <>
+                <AddPostForm />
                 <PostsList />
               </>
             )}
