@@ -1,33 +1,52 @@
 // Packages
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-// Redux Action
-import { postAdded } from './postsSlice'
+// Redux
+import { addNewPost } from './postsSlice'
 
 export const AddPostForm = () => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
   const [userId, setUserId] = useState('')
+  const [addRequestStatus, setAddRequestStatus] = useState('idle')
 
   const dispatch = useDispatch()
 
-  const users = useSelector(state => state.users)
+  const users = useSelector((state) => state.users)
 
   const onTitleChanged = (e) => setTitle(e.target.value)
   const onContentChanged = (e) => setContent(e.target.value)
   const onAuthorChanged = (e) => setUserId(e.target.value)
 
-  const onSavePostClicked = () => {
-    if (title && content) {
-      dispatch(postAdded(title, content, userId))
-      setTitle('')
-      setContent('')
+  const canSave =
+    [title, content, userId].every(Boolean) && addRequestStatus === 'idle'
+
+  const onSavePostClicked = async () => {
+    if (canSave) {
+      try {
+        setAddRequestStatus('pending')
+        await dispatch(addNewPost({ title, content, user: userId })).unwrap()
+        setTitle('')
+        setContent('')
+        setUserId('')
+      } catch (err) {
+        /** 
+         * createAsyncThunk will handle any errors internally, so that we won't
+         * see any messages about 'rejected Promises' in our logs. However, it's
+         * common to want to write logic that looks at the success or failure of
+         * the actual request that was made. Redux Toolkit adds a .unwrap()
+         * function to the returned Promise, which will return a new Promise that
+         * either has the actual action.payload value from a fulfilled action, or
+         * throws an error if it's the rejected action.
+         */
+        console.error('Failed to save the post: ', err)
+      } finally {
+        setAddRequestStatus('idle')
+      }
     }
   }
 
-  const canSave = Boolean(title) && Boolean(content) && Boolean(userId)
-
-  const usersOptions = users.map(user => (
+  const usersOptions = users.map((user) => (
     <option key={user.id} value={user.id}>
       {user.name}
     </option>
@@ -60,7 +79,7 @@ export const AddPostForm = () => {
           value={content}
           onChange={onContentChanged}
         />
-        <button type="button" onClick={onSavePostClicked} disabled={!canSave} >
+        <button type="button" onClick={onSavePostClicked} disabled={!canSave}>
           Save Post
         </button>
       </form>
