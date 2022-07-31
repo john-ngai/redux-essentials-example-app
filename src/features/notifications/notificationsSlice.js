@@ -1,4 +1,4 @@
-const { createSlice, createAsyncThunk } = require('@reduxjs/toolkit')
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { client } from '../../api/client'
 
 export const fetchNotifications = createAsyncThunk(
