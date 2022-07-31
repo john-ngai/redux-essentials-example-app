@@ -54,7 +54,7 @@ export const PostsList = () => {
       <PostExcerpt key={post.id} post={post} />
     ))
   } else if (postStatus === 'failed') {
-    content = <div>{error}</div>
+    content = <div>{postError}</div>
   }
 
   return (
