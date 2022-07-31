@@ -5,11 +5,11 @@ export const fetchNotifications = createAsyncThunk(
   'notifications/fetchNotifications',
   async (_, { getState }) => {
     const allNotifications = selectAllNotifications(getState())
-    
+
     // Since the array of notifications is sorted newest first,
     // we can grab the latest one using array destructuring.
     const [latestNotification] = allNotifications
-    
+
     const latestTimestamp = latestNotification ? latestNotification.date : ''
     const response = await client.get(
       `/fakeApi/notifications?since=${latestTimestamp}`
@@ -21,11 +21,21 @@ export const fetchNotifications = createAsyncThunk(
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState: [],
-  reducers: {},
+  reducers: {
+    allNotificationsRead(state, action) {
+      state.forEach((notification) => {
+        notification.read = true
+      })
+    },
+  },
   extraReducers(builder) {
     builder.addCase(fetchNotifications.fulfilled, (state, action) => {
       state.push(...action.payload)
-      // Sort with newest first
+      state.forEach((notification) => {
+        // Any notifications we've read are no longer new.
+        notification.isNew = !notification.read
+      })
+      // Sort with newest first.
       state.sort((a, b) => b.date.localeCompare(a.date))
     })
   },
