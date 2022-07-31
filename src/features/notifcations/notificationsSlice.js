@@ -5,7 +5,11 @@ export const fetchNotifications = createAsyncThunk(
   'notifications/fetchNotifications',
   async (_, { getState }) => {
     const allNotifications = selectAllNotifications(getState())
+    
+    // Since the array of notifications is sorted newest first,
+    // we can grab the latest one using array destructuring.
     const [latestNotification] = allNotifications
+    
     const latestTimestamp = latestNotification ? latestNotification.date : ''
     const response = await client.get(
       `/fakeApi/notifications?since=${latestTimestamp}`
