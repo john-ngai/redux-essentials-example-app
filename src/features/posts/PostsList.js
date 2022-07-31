@@ -1,14 +1,25 @@
-import { useSelector } from 'react-redux'
+
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 // Components
 import { PostAuthor } from './PostAuthor'
 import { TimeAgo } from './TimeAgo'
 import { ReactionButtons } from './ReactionButtons'
-// Selector function
-import { selectAllPosts } from './postsSlice'
+// Selector function & thunk
+import { selectAllPosts, fetchPosts } from './postsSlice'
 
 export const PostsList = () => {
+  const dispatch = useDispatch()
   const posts = useSelector(selectAllPosts)
+
+  const postStatus = useSelector(state => state.posts.status)
+
+  useEffect(() => {
+    if (postStatus === 'idle') {
+      dispatch(fetchPosts())
+    }
+  }, [postStatus, dispatch])
 
   // Sort posts in reverse chronological order by datetime string
   const orderedPosts = posts
