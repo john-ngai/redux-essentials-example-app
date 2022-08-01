@@ -7,12 +7,7 @@ import { TimeAgo } from './TimeAgo'
 import { ReactionButtons } from './ReactionButtons'
 import { Spinner } from '../../components/Spinner'
 // Redux
-import {
-  selectAllPosts,
-  fetchPosts,
-  selectPostIds,
-  selectPostById,
-} from './postsSlice'
+import { fetchPosts, selectPostIds, selectPostById } from './postsSlice'
 
 const PostExcerpt = ({ postId }) => {
   const post = useSelector((state) => selectPostById(state, postId))
@@ -52,7 +47,6 @@ export const PostsList = () => {
   if (postStatus === 'loading') {
     content = <Spinner text="Loading..." />
   } else if (postStatus === 'succeeded') {
-
     content = orderedPostIds.map((postId) => (
       <PostExcerpt key={postId} postId={postId} />
     ))
