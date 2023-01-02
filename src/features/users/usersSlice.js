@@ -1,15 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { client } from '../../api/client'
 
-const initialState = [
-  { id: '0', name: 'Tianna Jenkins' },
-  { id: '1', name: 'Kevin Grant' },
-  { id: '2', name: 'Madison Price' },
-]
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
+  const response = await client.get('/fakeApi/users')
+  return response.data
+})
 
 const usersSlice = createSlice({
   name: 'users',
-  initialState,
+  initialState: [],
   reducers: {},
+  extraReducers: (builder) => {
+    // Immer also allows us to update the state by returning a new result.
+    builder.addCase(fetchUsers.fulfilled, (state, action) => action.payload)
+  },
 })
 
 export default usersSlice.reducer
