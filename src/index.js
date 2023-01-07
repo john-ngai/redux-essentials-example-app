@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 
 import './index.css'
@@ -9,6 +9,9 @@ import store from './app/store'
 import { fetchUsers } from './features/users/usersSlice'
 import App from './App'
 
+const container = document.getElementById('root')
+const root = createRoot(container)
+
 // Wrap app rendering so we can wait for the mock API to initialize
 async function start() {
   // Start our mock API server
@@ -16,13 +19,12 @@ async function start() {
 
   store.dispatch(fetchUsers())
 
-  ReactDOM.render(
+  root.render(
     <React.StrictMode>
       <Provider store={store}>
         <App />
       </Provider>
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
   )
 }
 
