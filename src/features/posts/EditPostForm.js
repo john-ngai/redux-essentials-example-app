@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-// Redux action & selector function
+
 import { postUpdated, selectPostById } from './postsSlice'
 
 export const EditPostForm = ({ match }) => {

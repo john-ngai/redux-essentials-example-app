@@ -1,13 +1,11 @@
-import { client } from '../../api/client'
 import {
-  createEntityAdapter,
   createSlice,
   createAsyncThunk,
+  createEntityAdapter,
 } from '@reduxjs/toolkit'
+import { client } from '../../api/client'
 
 const usersAdapter = createEntityAdapter()
-
-const initialState = usersAdapter.getInitialState()
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
   const response = await client.get('/fakeApi/users')
@@ -16,11 +14,10 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
 
 const usersSlice = createSlice({
   name: 'users',
-  initialState,
+  initialState: usersAdapter.getInitialState(),
   reducers: {},
-  extraReducers(builder) {
-    // usersAdapter.setAll can be used when we want to replace the entire
-    // existing users array with the one fetched from the server.
+  extraReducers: (builder) => {
+    // Immer also allows us to update the state by returning a new result.
     builder.addCase(fetchUsers.fulfilled, usersAdapter.setAll)
   },
 })

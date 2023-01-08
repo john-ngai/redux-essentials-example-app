@@ -1,10 +1,10 @@
-import { client } from '../../api/client'
 import {
-  createEntityAdapter,
   createSlice,
   createAsyncThunk,
   createSelector,
+  createEntityAdapter,
 } from '@reduxjs/toolkit'
+import { client } from '../../api/client'
 
 const postsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.date.localeCompare(a.date),
@@ -35,7 +35,14 @@ const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    postUpdated(state, action) {
+    reactionAdded: (state, action) => {
+      const { postId, reaction } = action.payload
+      const existingPost = state.entities[postId]
+      if (existingPost) {
+        existingPost.reactions[reaction]++
+      }
+    },
+    postUpdated: (state, action) => {
       const { id, title, content } = action.payload
       const existingPost = state.entities[id]
       if (existingPost) {
@@ -43,15 +50,8 @@ const postsSlice = createSlice({
         existingPost.content = content
       }
     },
-    reactionAdded(state, action) {
-      const { postId, reaction } = action.payload
-      const existingPost = state.entities[postId]
-      if (existingPost) {
-        existingPost.reactions[reaction]++
-      }
-    },
   },
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
         state.status = 'loading'
@@ -84,6 +84,6 @@ export const {
 } = postsAdapter.getSelectors((state) => state.posts)
 
 export const selectPostsByUser = createSelector(
-  [selectAllPosts, (state, userId) => userId],
-  (posts, userId) => posts.filter((post) => post.user === userId)
+  [selectAllPosts, (_, userId) => userId],
+  (state, userId) => state.find((user) => user.id === userId)
 )

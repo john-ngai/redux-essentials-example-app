@@ -1,20 +1,21 @@
+import React from 'react'
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
 } from 'react-router-dom'
-// Components
+
 import { Navbar } from './app/Navbar'
-import { PostsList } from './features/posts/PostsList'
 import { AddPostForm } from './features/posts/AddPostForm'
+import { PostsList } from './features/posts/PostsList'
 import { SinglePostPage } from './features/posts/SinglePostPage'
 import { EditPostForm } from './features/posts/EditPostForm'
 import { UsersList } from './features/users/UsersList'
 import { UserPage } from './features/users/UserPage'
-import { NotificationsList } from './features/notifications/NotificationsList'
+import { NotificationsList } from './features/notifications/notificationsList'
 
-export default function App() {
+function App() {
   return (
     <Router>
       <Navbar />
@@ -41,3 +42,5 @@ export default function App() {
     </Router>
   )
 }
+
+export default App
